@@ -17,20 +17,22 @@ class Timer {
 private:
     chrono::milliseconds time;
     std::unique_ptr<thread> wait_thread;
+    std::atomic<bool> FLAG_FOR_TIMER{false};
 
 private:
-    std::atomic<bool> FLAG_FOR_TIMER{true};
-    std::atomic<bool> RUNNING{false};
     void wait_then_call()
     {
         int i {5};
-
         while (i > 0 && FLAG_FOR_TIMER.load()) {
             this_thread::sleep_for(time);
             cout << "Thread " << wait_thread->get_id() << "\tcountdown at: " <<  i <<
-            "\t\tFLAG_FOR_TIMER =" << FLAG_FOR_TIMER << "\tAdress =" << &FLAG_FOR_TIMER << "\tThis=" << this << std::endl;
+            "\t\tFLAG_FOR_TIMER = " << FLAG_FOR_TIMER << "\tAdress = " << &FLAG_FOR_TIMER << "\tThis= " << this << std::endl;
             --i;
+          /*  if(i == 0){
+                FLAG_FOR_TIMER = false;
+            }*/
         }
+       //
     }
 
 public:
@@ -38,26 +40,26 @@ public:
 
     }
 
-    void timerStart() {
+    int timerStart() {
+        if(FLAG_FOR_TIMER == true) return 1;
         FLAG_FOR_TIMER.store(true);
         this->time = chrono::milliseconds{ WAIT_FOR };
         wait_thread = make_unique<thread>(&Timer::wait_then_call, this);
+        return 1;
     }
 
-    void timerStop() {
-       FLAG_FOR_TIMER.store(false);
-       wait_thread->join();
+    int timerStop() {
+        if (FLAG_FOR_TIMER == false) return 1;
+        FLAG_FOR_TIMER.store(false);
+        wait_thread->join();
+        return 0;
     }
 
-    void restartTimer() {
+    int restartTimer() {
+        if (FLAG_FOR_TIMER == false) return 1;
         timerStop();
         timerStart();
-
-    }
-
-    void join(){
-        if (wait_thread->joinable())
-            wait_thread->join();
+        return 0;
     }
 
     ~Timer() {
@@ -80,7 +82,14 @@ int main()
     this_thread::sleep_for(std::chrono::seconds(2));
     t1.restartTimer();
     this_thread::sleep_for(std::chrono::seconds(2));
-   // t1.timerStart();
+    t1.timerStart();
+    this_thread::sleep_for(std::chrono::seconds(2));
+    t1.timerStart();
+    this_thread::sleep_for(std::chrono::seconds(2));
+    t1.timerStart();
+    cout << "w8 5 sec" << endl;
+    t1.timerStart();
+
     return 0;
 }
 

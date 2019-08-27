@@ -17,10 +17,19 @@ int main()
 
     t1.timerStart(foo);
     this_thread::sleep_for(3s);
-    t1.timerStart(boo);
-    this_thread::sleep_for(10ms);
+    t1.timerStart(too);
+    this_thread::sleep_for(1s);
     t1.timerStop();
     this_thread::sleep_for(1s);
     t1.timerStart(too);
+    this_thread::sleep_for(1s);
+    t1.timerRestart(too);
+    t1.timerStop();
+    t1.timerStop();
+    t1.timerRestart(too);
+
+   
+
+
     return 0;
 }

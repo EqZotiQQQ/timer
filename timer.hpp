@@ -1,7 +1,7 @@
 #ifndef _TIMER_HPP_
 #define _TIMER_HPP_
 
-
+#include <functional>
 #include <chrono>
 #include <thread>
 #include <atomic>

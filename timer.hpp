@@ -5,7 +5,6 @@
 #include <chrono>
 #include <thread>
 #include <atomic>
-#include <condition_variable>
 
 namespace timer{
 
@@ -18,7 +17,6 @@ class Timer {
 private:
     c_ms time;
     std::unique_ptr<std::thread> th;
-    a_bool finished{false};
     a_bool FLAG_FOR_TIMER{false};
 private:
     void ticks();
@@ -26,7 +24,7 @@ public:
     Timer();
     int timerStart();
     int timerStop();
-    int restartTimer();
+    int timerRestart();
     ~Timer();
 };
 

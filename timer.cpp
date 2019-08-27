@@ -1,14 +1,9 @@
 #include "timer.hpp"
 
-
 #include <memory>
-#include <iostream>
 
+#define WAIT_FOR 100
 
-#define WAIT_FOR 500
-
-using std::cout;
-using std::endl;
 using namespace timer;
 
 Timer::Timer() {
@@ -30,7 +25,7 @@ int Timer::timerStop() {
     return 0;
 }
 
-int Timer::restartTimer() {
+int Timer::timerRestart() {
     if (FLAG_FOR_TIMER == false) return 1;
     timerStop();
     timerStart();
@@ -47,7 +42,6 @@ void Timer::ticks()
     int i {5};
     while (i > 0 && FLAG_FOR_TIMER.load()) {
         std::this_thread::sleep_for(time);
-        std::cout << "ticks left: " << i << std::endl;
         --i;
         if(i == 0){
             if(th->joinable()){

@@ -1,62 +1,80 @@
-#include "timer.hpp"
+#include "timer.h"
 
 #include <memory>
 
-#define WAIT_FOR 100
+#include<iostream>
+using namespace std;
+
+#define WAIT_FOR 1000
 
 using namespace timer;
 
-Timer::Timer():status(NEVER_RUN) {
-
+Timer::Timer()
+    : status(NEVER_RUN)
+    , mTime(std::chrono::milliseconds{ 5000 })
+{
+    cout << "Timer()" << endl;
 }
 
-ExitStatus Timer::timerStart(const std::function<void(void)>& f) {
-    if( (status == FINISHED) && (th->joinable()) ) {
-        th->join();
+Timer::Timer(std::chrono::milliseconds ms)
+    : status(NEVER_RUN)
+    , mTime(ms)
+{
+}
+
+Timer::Timer(int sec)
+    : status(NEVER_RUN)
+    , mTime(std::chrono::milliseconds{ sec * 1000 })
+{
+}
+
+ExitStatus Timer::run(const std::function<void(void)>& callback) {
+    cout << "run()" << endl;
+    if ((status == FINISHED) && (mTimerThread->joinable())) {
+        mTimerThread->join();
     }
-    if( (status == RUNNING) || (th != nullptr && th->joinable()) ) {
+    if (status == RUNNING) {
+        stop();
+    }
+    if (mTimerThread != nullptr && mTimerThread->joinable()) {
         return IS_RUNNING;
     }
-    runFunction = f;
+    mCallback = callback;
     status = RUNNING;
-    this->time = c_ms{ WAIT_FOR };
-    th = std::make_unique<std::thread>(&Timer::ticks, this);
+    mTimerThread = std::make_unique<std::thread>(&Timer::ticks, this);
     return SUCCESFULL_EXIT;
 }
 
-ExitStatus Timer::timerStop() {
+ExitStatus Timer::stop() {
+    cout << "stop()" << endl;
     if (status == STOPPED) {
         return IS_STOPPED;
     }
     status = STOPPED;
-    th->join();
+    mTimerThread->join();
     return SUCCESFULL_EXIT;
 }
 
-ExitStatus Timer::timerRestart(const std::function<void(void)>& f) {
-    if (STOPPED == false) {
-        return IS_STOPPED;
-    }
-    timerStop();
-    timerStart(f);
-    return SUCCESFULL_EXIT;
+void Timer::setTimer(std::chrono::milliseconds ms) {
+    mTime = ms;
+}
+
+void Timer::setTimer(int sec) {
+    mTime = std::chrono::milliseconds{ sec * 1000 };
 }
 
 Timer::~Timer() {
-    if (th->joinable()) {
-        th->join();
+    if (mTimerThread->joinable()) {
+        mTimerThread->join();
     }
 }
 
 void Timer::ticks()
 {
-    int i {5};
-    while ( (i > 0) && (status == RUNNING) ) {
-        std::this_thread::sleep_for(time);
-        --i;
-        if(i == 0) {
-            status = FINISHED;
-            runFunction();
-        }
+    while (status == RUNNING) {
+        std::this_thread::sleep_for(mTime);
+        status = FINISHED;
+        mCallback();
     }
+
 }

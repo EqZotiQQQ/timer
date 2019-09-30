@@ -1,35 +1,44 @@
-#include "timer.hpp"
 #include <iostream>
-using namespace timer;
+#include "timer.h"
+#include "timeruser.h"
 using namespace std;
-void foo(){
-    cout << "111" << endl;
+using namespace timer;
+void fun() {
+    cout << "hi!" << endl;
 }
-void boo(){
-    cout << "211" << endl;
-}
-void too(){
-    cout << "311" << endl;
-}
-int main()
-{
-    Timer t1;
+int main() {
+    //TimerUser tu;
+    //tu.start();
+    //this_thread::sleep_for(1s);
+    //tu.start();
+    //this_thread::sleep_for(1s);
+    //tu.stop();
+    //tu.start();
+    //this_thread::sleep_for(1s);
 
-    t1.timerStart(foo);
-    this_thread::sleep_for(3s);
-    t1.timerStart(too);
-    this_thread::sleep_for(1s);
-    t1.timerStop();
-    this_thread::sleep_for(1s);
-    t1.timerStart(too);
-    this_thread::sleep_for(1s);
-    t1.timerRestart(too);
-    t1.timerStop();
-    t1.timerStop();
-    t1.timerRestart(too);
-
-   
+    Timer timer(2);
+    timer.setTimer(5);
+    timer.run([](){
+        fun();
+    });
 
 
+
+
+   // Timer timer;
+   // timer.run([](){
+   //     fun();
+   // });
+   // cout << "HI" << endl;
+   // this_thread::sleep_for(4s);
+   // timer.run([](){
+   //    fun();
+   //    cout << "sss" << endl;
+   // });
+   // this_thread::sleep_for(1s);
+   // timer.run([](){
+   //    fun();
+   //    cout << "sssAAAA" << endl;
+   // });
     return 0;
 }

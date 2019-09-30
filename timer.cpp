@@ -2,9 +2,6 @@
 
 #include <memory>
 
-#include<iostream>
-using namespace std;
-
 #define WAIT_FOR 1000
 
 using namespace timer;
@@ -13,7 +10,6 @@ Timer::Timer()
     : status(NEVER_RUN)
     , mTime(std::chrono::milliseconds{ 5000 })
 {
-    cout << "Timer()" << endl;
 }
 
 Timer::Timer(std::chrono::milliseconds ms)
@@ -29,7 +25,6 @@ Timer::Timer(int sec)
 }
 
 ExitStatus Timer::run(const std::function<void(void)>& callback) {
-    cout << "run()" << endl;
     if ((status == FINISHED) && (mTimerThread->joinable())) {
         mTimerThread->join();
     }
@@ -46,7 +41,6 @@ ExitStatus Timer::run(const std::function<void(void)>& callback) {
 }
 
 ExitStatus Timer::stop() {
-    cout << "stop()" << endl;
     if (status == STOPPED) {
         return IS_STOPPED;
     }

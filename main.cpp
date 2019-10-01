@@ -16,8 +16,16 @@ int main() {
     //tu.start();
     //this_thread::sleep_for(1s);
 
-    Timer timer(2);
-    timer.setTimer(5);
+    Timer timer(1);
+    timer.setTimer(10);
+    timer.run([](){
+        fun();
+    });
+    cout << "sleepfor" << endl;
+    this_thread::sleep_for(3s);
+    cout << "sleepfor" << endl;
+    timer.stop();
+    timer.setTimer(2);
     timer.run([](){
         fun();
     });

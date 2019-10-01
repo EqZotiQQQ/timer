@@ -5,6 +5,8 @@
 #include <chrono>
 #include <thread>
 #include <functional>
+#include <condition_variable>
+
 namespace timer{
 
 enum TimerStatus{NEVER_RUN, FINISHED, STOPPED, RUNNING};
@@ -17,6 +19,8 @@ private:
     std::chrono::milliseconds mTime;
     std::unique_ptr<std::thread> mTimerThread;
     std::function <void(void)> mCallback;
+    std::condition_variable cv;
+    std::mutex cv_m;
 private:
     void ticks();
 public:

@@ -45,6 +45,7 @@ ExitStatus Timer::stop() {
         return IS_STOPPED;
     }
     status = STOPPED;
+    cv.notify_all();
     mTimerThread->join();
     return SUCCESFULL_EXIT;
 }
@@ -65,8 +66,9 @@ Timer::~Timer() {
 
 void Timer::ticks()
 {
-    while (status == RUNNING) {
-        std::this_thread::sleep_for(mTime);
+    std::unique_lock<std::mutex> lk(cv_m);
+    cv.wait_for(lk, mTime, [this](){return status != RUNNING;});
+    if (status == RUNNING) {
         status = FINISHED;
         mCallback();
     }

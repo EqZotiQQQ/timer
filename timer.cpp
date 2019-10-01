@@ -8,19 +8,13 @@ using namespace timer;
 
 Timer::Timer()
     : status(NEVER_RUN)
-    , mTime(std::chrono::milliseconds{ 5000 })
+    , mTime(std::chrono::duration<int> (std::chrono::seconds{ 5 }))
 {
 }
 
-Timer::Timer(std::chrono::milliseconds ms)
+Timer::Timer(std::chrono::duration<int> ms)
     : status(NEVER_RUN)
     , mTime(ms)
-{
-}
-
-Timer::Timer(int sec)
-    : status(NEVER_RUN)
-    , mTime(std::chrono::milliseconds{ sec * 1000 })
 {
 }
 
@@ -50,12 +44,8 @@ ExitStatus Timer::stop() {
     return SUCCESFULL_EXIT;
 }
 
-void Timer::setTimer(std::chrono::milliseconds ms) {
+void Timer::setTimer(std::chrono::duration<int> ms) {
     mTime = ms;
-}
-
-void Timer::setTimer(int sec) {
-    mTime = std::chrono::milliseconds{ sec * 1000 };
 }
 
 Timer::~Timer() {
@@ -64,13 +54,11 @@ Timer::~Timer() {
     }
 }
 
-void Timer::ticks()
-{
+void Timer::ticks() {
     std::unique_lock<std::mutex> lk(cv_m);
     cv.wait_for(lk, mTime, [this](){return status != RUNNING;});
     if (status == RUNNING) {
         status = FINISHED;
         mCallback();
     }
-
 }

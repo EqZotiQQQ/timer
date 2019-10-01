@@ -16,8 +16,7 @@ int main() {
     //tu.start();
     //this_thread::sleep_for(1s);
 
-    Timer timer(1);
-    timer.setTimer(10);
+    Timer timer(std::chrono::duration<int> (5));
     timer.run([](){
         fun();
     });
@@ -25,7 +24,7 @@ int main() {
     this_thread::sleep_for(3s);
     cout << "sleepfor" << endl;
     timer.stop();
-    timer.setTimer(2);
+    timer.setTimer(std::chrono::duration<int> (2));
     timer.run([](){
         fun();
     });

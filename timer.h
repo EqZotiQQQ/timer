@@ -16,8 +16,8 @@ enum ExitStatus{IS_RUNNING = 2, IS_STOPPED = 1, SUCCESFULL_EXIT = 0};
 class Timer {
 private:
     TimerStatus status;
-    std::chrono::milliseconds mTime;
     std::unique_ptr<std::thread> mTimerThread;
+    std::chrono::duration<int> mTime;
     std::function <void(void)> mCallback;
     std::condition_variable cv;
     std::mutex cv_m;
@@ -25,12 +25,10 @@ private:
     void ticks();
 public:
     Timer();
-    Timer(std::chrono::milliseconds ms);
-    Timer(int sec);
+    Timer(std::chrono::duration<int> mTime);
     ExitStatus run(const std::function<void(void)> & callback);
     ExitStatus stop();
-    void setTimer(std::chrono::milliseconds ms);
-    void setTimer(int sec);
+    void setTimer(std::chrono::duration<int> mTime);
     ~Timer();
 };
 

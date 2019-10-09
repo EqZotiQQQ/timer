@@ -5,9 +5,9 @@ CONFIG -= qt
 
 SOURCES += \
         main.cpp \
-    timer.cpp \
-    timeruser.cpp
+    src/timer.cpp \
+    src/timeruser.cpp
 
 HEADERS += \
-    timer.h \
-    timeruser.h
+    headers/timer.h \
+    headers/timeruser.h

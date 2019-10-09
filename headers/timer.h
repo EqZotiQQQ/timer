@@ -10,8 +10,6 @@
 namespace timer{
 
 enum TimerStatus{NEVER_RUN, FINISHED, STOPPED, RUNNING};
-enum ExitStatus{IS_RUNNING = 2, IS_STOPPED = 1, SUCCESFULL_EXIT = 0};
-
 
 class Timer {
 private:
@@ -26,8 +24,8 @@ private:
 public:
     Timer();
     Timer(std::chrono::duration<int> mTime);
-    ExitStatus run(const std::function<void(void)> & callback);
-    ExitStatus stop();
+    void run(const std::function<void(void)> & callback);
+    void stop();
     void setTimer(std::chrono::duration<int> mTime);
     ~Timer();
 };

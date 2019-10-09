@@ -1,8 +1,6 @@
-#include "timer.h"
+#include "../headers/timer.h"
 
 #include <memory>
-
-#define WAIT_FOR 1000
 
 using namespace timer;
 
@@ -18,7 +16,7 @@ Timer::Timer(std::chrono::duration<int> ms)
 {
 }
 
-ExitStatus Timer::run(const std::function<void(void)>& callback) {
+void Timer::run(const std::function<void(void)>& callback) {
     if ((status == FINISHED) && (mTimerThread->joinable())) {
         mTimerThread->join();
     }
@@ -26,22 +24,20 @@ ExitStatus Timer::run(const std::function<void(void)>& callback) {
         stop();
     }
     if (mTimerThread != nullptr && mTimerThread->joinable()) {
-        return IS_RUNNING;
+        return;
     }
     mCallback = callback;
     status = RUNNING;
     mTimerThread = std::make_unique<std::thread>(&Timer::ticks, this);
-    return SUCCESFULL_EXIT;
 }
 
-ExitStatus Timer::stop() {
+void Timer::stop() {
     if (status == STOPPED) {
-        return IS_STOPPED;
+        return;
     }
     status = STOPPED;
     cv.notify_all();
     mTimerThread->join();
-    return SUCCESFULL_EXIT;
 }
 
 void Timer::setTimer(std::chrono::duration<int> ms) {

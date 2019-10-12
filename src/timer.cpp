@@ -1,4 +1,4 @@
-#include "../headers/timer.h"
+#include "timer.h"
 
 #include <memory>
 

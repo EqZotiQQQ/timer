@@ -1,6 +1,6 @@
 #include <iostream>
-#include "headers/timer.h"
-#include "headers/timeruser.h"
+#include "timer.h"
+#include "timeruser.h"
 using namespace std;
 using namespace timer;
 void fun() {

@@ -8,6 +8,9 @@ SOURCES += \
     src/timer.cpp \
     src/timeruser.cpp
 
+INCLUDEPATH += \
+    headers
+
 HEADERS += \
     headers/timer.h \
     headers/timeruser.h
